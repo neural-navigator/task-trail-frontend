@@ -5,7 +5,7 @@ import  {Navigate} from 'react-router-dom';
 const RequireAuth = ({children}) => {
     const auth = useAuth();
   
-    if (!auth.user) {
+    if (!auth.user.username) {
         return <Navigate to='/login' />
     }
 

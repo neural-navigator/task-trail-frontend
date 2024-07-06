@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import bcrypt from 'bcryptjs';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
@@ -33,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:4001/api/v1/verify-user", user);
-      auth.login(response.data.username);
+      auth.login({username: response.data.username, sessionToken: response.data.token});
       navigate('/dashboard', {replace: true});
     } catch (error) {
       navigate('/signup', {replace: true})
