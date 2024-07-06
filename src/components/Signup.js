@@ -27,7 +27,6 @@ const Signup = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    user.password = await bcrypt.hashSync(user.password, user.name);
     console.log(user);
     const response = await axios.post("http://localhost:4001/api/v1/create-user", user);
     console.log(response);
