@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import bcrypt from 'bcryptjs';
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -18,6 +19,7 @@ const Signup = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    user.password = await bcrypt.hash(user.password, 10);
     console.log(user);
     const response = await axios.post("http://localhost:3002/users", user);
     console.log(response);
