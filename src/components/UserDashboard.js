@@ -1,9 +1,11 @@
 import React from 'react'
+import { useAuth } from './AuthProvider'
 
-const UserDashboard = (username) => {
+const UserDashboard = () => {
+    const auth = useAuth();
   return (
     <div>
-      Hello, {username}
+      Hello, {auth.user}
     </div>
   )
 }

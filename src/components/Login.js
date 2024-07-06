@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import bcrypt from 'bcryptjs';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
 
 
 const Login = () => {
 
+  const auth = useAuth();
   const navigate = useNavigate();
   const [user, setUser] = useState({
     email: '',
@@ -31,11 +33,10 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:4001/api/v1/verify-user", user);
-
-      if (response.OK) {
-        navigate('/dashboard', {replace: true});
-      }
+      auth.login(response.data.username);
+      navigate('/dashboard', {replace: true});
     } catch (error) {
+      navigate('/signup', {replace: true})
       console.log(error);
     }
     
