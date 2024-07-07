@@ -31,7 +31,6 @@ const CreateTasks = () => {
 
     const handleSubmit = async(category) => {
         const newTask = {...task, category}
-        // console.log(newTask);
         const response = await axios.post("http://localhost:4001/api/v1/create-task", newTask, headers)
         console.log(response);
     }
