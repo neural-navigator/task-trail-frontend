@@ -74,7 +74,8 @@ const CreateTasks = () => {
     </label>
 
     <label>
-            Task Type: <select name="taskType" value={task.taskType}>
+            Task Type: <select name="taskType" value={task.taskType} onChange={handleChange}>
+                <option value="">Task Type</option>
                 <option value="tech">Tech</option>
                 <option value="nonTech">Non Tech</option>
                 <option value="other">Others</option>
