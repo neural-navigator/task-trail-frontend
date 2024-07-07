@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from './AuthProvider';
 
 const CreateTasks = () => {
+
+    const auth = useAuth();
 
     const [task, setTask] = useState({
         title: '',
         description: '',
+        category: '',
         token: '',
         rewardType: '',
         rewardAmount: '',
@@ -14,10 +19,23 @@ const CreateTasks = () => {
         taskType: ''
     })
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        console.log(task);
+    if (!auth.user.sessionToken) {
+        return {error: "token not present"}
     }
+
+    const headers = {
+        headers: {
+            Authorization: `Bearer ${auth.user.sessionToken}`
+        }
+    }
+
+    const handleSubmit = async(category) => {
+        const newTask = {...task, category}
+        // console.log(newTask);
+        const response = await axios.post("http://localhost:4001/api/v1/create-task", newTask, headers)
+        console.log(response);
+    }
+    
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -34,7 +52,7 @@ const CreateTasks = () => {
   return (
     <div>
       Create a new Task
-      <form onSubmit={handleSubmit}>
+      <form>
         <label>
             Title: <input type="text" id="title" name="title" value={task.title} onChange={handleChange} />
         </label>
@@ -81,7 +99,8 @@ const CreateTasks = () => {
                 <option value="other">Others</option>
             </select>
         </label>
-        <button type="submit">Submit</button>
+        <button type="button" onClick={() => handleSubmit('draft')}>Save Draft</button>
+        <button type="button" onClick={() => handleSubmit('published')}>Publish</button>
       </form>
     </div>
   )
