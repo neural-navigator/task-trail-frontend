@@ -5,7 +5,9 @@ import axios from 'axios';
 
 const UserProfile = () => {
     const auth = useAuth();
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({
+      name: '', email: '', createdAt: ''
+    });
 
     const headers = {
       headers : {
@@ -28,12 +30,10 @@ const UserProfile = () => {
       fetchUserProfile();
     }, [auth.user.sessionToken])
 
-    
   return (
     <div>
       <h1>{user.name}</h1>
       <h2>{user.email}</h2>
-      <h2>{user.createdAt}</h2>
       <nav>
         <Link to="/edit-profile">Edit Profile</Link>
       </nav>
