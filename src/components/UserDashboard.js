@@ -10,7 +10,6 @@ const UserDashboard = () => {
       <nav>
       <Link to="/profile">Profile</Link>
       <Link to="/tasks">Tasks</Link>
-      <Link to="/create-task">Create Task</Link>
       </nav>
       <Outlet />
     </div>

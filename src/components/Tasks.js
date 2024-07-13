@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from './AuthProvider';
+import CreateTasks from './CreateTasks';
+import TaskViewer from './TaskViewer';
 
 
 const Tasks = () => {
@@ -35,9 +37,13 @@ const Tasks = () => {
     }
 
     try {
-      console.log(`headers is ${JSON.stringify(headers)}`);
       const response = await axios.post("http://localhost:4001/api/v1/get-task", payload, headers);
-      setTasks(response.data.tasks);
+      if (response.status===200){
+        setTasks(response.data.tasks);
+      } else {
+        setTasks([]);
+      }
+      
       console.log(response);
     } catch(error) {
       console.log(`error occurs ${error}`);
@@ -48,72 +54,50 @@ const Tasks = () => {
       const payload = {
         taskType
       }
+      try {
       const response = await axios.post("http://localhost:4001/api/v1/get-user-tasks", payload, headers);
-      setTasks(response.data.tasks)
+      if (response.status === 200 || response.status === 404){
+        console.log(`no tasks found`);
+        setTasks(response.data.tasks)
+      } else {
+        setTasks([])
+      }
+    } catch(error) {
+      console.log(`Error:: ${error}`);
+    }
+      
   }
 }
 
   fetchData();
 
-  }, []);
-
-  const saveTask = async(taskId, category) => {
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${auth.user.sessionToken}`
-        }
-      }
-      const body = {taskId, category}
-
-      try {
-        const response = await axios.post("http://localhost:4001/api/v1/save-task", body, headers);
-        console.log(response);
-      } catch (error) {
-          console.log(`Error :: ${error}`)
-      }
-  }
+  }, [taskType, auth.user.sessionToken]);
 
   return (
     <div>
-      All tasks Here
       <div onClick={() => handleClick("createTask")}>
           Create Task
       </div>
-      <div onClick={() => handleClick("createTask")}>
-          Create Task
+      <div onClick={() => handleClick("draft")}>
+          Drafts
       </div>
-      <div onClick={() => handleClick("createTask")}>
-          Create Task
+      <div onClick={() => handleClick("active")}>
+          Your Tasks
       </div>
-      {/* <Link to="create-task">Create Task</Link>
-      <Link to="draft-tasks">Your Drafts</Link>
-      <Link to="active-tasks">Created By You</Link>
-      <Link to="participated-tasks">Participated</Link>
-      <Link to="saved-tasks">Saved</Link>
-      <Link to="expired-tasks">Expired</Link> */}
+      <div onClick={() => handleClick("participation")}>
+          Participated
+      </div>
+      <div onClick={() => handleClick("saved")}>
+          Saved
+      </div>
+      <div onClick={() => handleClick("expired")}>
+          Expired
+      </div>
+
       <div>
-        <h1>All tasks</h1>
-        {tasks.length > 0 ? (
-        <ul>
-          {tasks.map((task) => (
-
-            
-
-            <li key={task._id}>
-              <h2>{task.title}</h2>
-              <p>{task.description}</p>
-              <p>{task.category}</p>
-
-              
-              <button onClick={() => saveTask(task._id, 'saved')}>Save</button>
-              <button onClick={() => saveTask(task._id, 'participation')}>Participate</button>
-            </li>
-            
-          ))}
-        </ul>
-      ) : (
-        <p>No tasks available.</p>
-      )}
+        {
+          (taskType === "createTask") ? <CreateTasks /> : <TaskViewer tasks={tasks} />
+        }
       </div>
       
     </div>
